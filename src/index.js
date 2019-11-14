@@ -1,12 +1,12 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import * as serviceWorker from './serviceWorker';
+
+/*
+Inicia a aplicação web Single Page, o 'render' é uma função
+que recebe 2 paramentros: 1 aplicação, 1 pagina html para injetar a aplicação.
+
+root -> é o id da página 'index.html' que esta na pasta 'public'.
+*/
 
 ReactDOM.render(<App />, document.getElementById('root'));
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: https://bit.ly/CRA-PWA
-serviceWorker.unregister();

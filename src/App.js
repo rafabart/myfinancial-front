@@ -1,24 +1,13 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
 
+//Os componentes são criados por funções.
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+
+    //Cada div é um nó, e só é possível um nó, caso queira usar mais divs,
+    //é necessário cria-las dentro de uma unica div.
+    <div>
+      Hello world!
     </div>
   );
 }
