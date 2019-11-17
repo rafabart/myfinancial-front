@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import App from './App';
+import App from './main/App';
 
 /*
 Inicia a aplicação web Single Page, o 'render' é uma função
