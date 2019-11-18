@@ -5,18 +5,39 @@ import FormGroup from '../components/form-group';
 //Permite navegar para outros componentes.
 import { withRouter } from 'react-router-dom';
 
+//Permite fazer requisições http (get, post, put...)
+import axios from 'axios';
+
 
 //Componente de classe
 class Login extends React.Component {
 
     state = {
         email: '',
-        password: ''
+        password: '',
+        messageError: ''
     }
 
-    login = () => {
-        console.log('Email: ', this.state.email);
-        console.log('Senha: ', this.state.password);
+
+
+    /*
+    async -> palavra reservada para indicar que a função é assincrona.
+    
+    await -> define que só podera seguir para próxima linha ou instrução
+        quando a função com a notação await for comcluída.(async requerido na
+        assinatura da funçao)
+    */
+
+    login = async () => {
+        axios
+            .post('http://localhost:8080/api/users/authentication', {
+                email: this.state.email,
+                password: this.state.password
+            }).then(response => {
+                this.props.history.push("/home")
+            }).catch(error => {
+                this.setState({ messageError: error.response.data })
+            })
     }
 
     prepareFormUser = () => {
@@ -35,6 +56,10 @@ class Login extends React.Component {
                     <div className="bs-docs-section">
 
                         <Card title="Login">
+
+                            <div className="row">
+                                <span>{this.state.messageError}</span>
+                            </div>
 
                             <div className="row">
                                 <div className="col-lg-12">
