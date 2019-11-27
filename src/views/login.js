@@ -5,8 +5,8 @@ import FormGroup from '../components/form-group';
 //Permite navegar para outros componentes.
 import { withRouter } from 'react-router-dom';
 
-//Permite fazer requisições http (get, post, put...)
-import axios from 'axios';
+import UsuarioService from '../app/service/usuarioService'
+import localstoreService from '../app/service/localstoreService'
 
 
 //Componente de classe
@@ -15,10 +15,14 @@ class Login extends React.Component {
     state = {
         email: '',
         password: '',
-        messageError: ''
+        messageError: null
     }
 
 
+    constructor() {
+        super()
+        this.service = new UsuarioService()
+    }
 
     /*
     async -> palavra reservada para indicar que a função é assincrona.
@@ -29,15 +33,28 @@ class Login extends React.Component {
     */
 
     login = async () => {
-        axios
-            .post('http://localhost:8080/api/users/authentication', {
-                email: this.state.email,
-                password: this.state.password
-            }).then(response => {
-                this.props.history.push("/home")
-            }).catch(error => {
-                this.setState({ messageError: error.response.data })
-            })
+
+        this.service.autenticar({
+            email: this.state.email,
+            password: this.state.password
+
+        }).then(response => {
+            /*
+            localStorage('nome_da_variável',valor_da_variável) -> é uma variável global
+            do navegador para armazenar valores no front não é recomendado para
+            passar informações importantes (como senha).
+
+            JSON.stringify(objeto_js) -> JSON.stringify transforma um objeto JS que vem
+            do backend em String.
+            */
+
+            localstoreService.adicionarItem('_usuario_logado', response.data)
+            this.props.history.push("/home")
+
+        }).catch(error => {
+
+            this.setState({ messageError: error.response.data })
+        })
     }
 
     prepareFormUser = () => {
