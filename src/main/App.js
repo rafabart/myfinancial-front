@@ -5,8 +5,13 @@ import React from 'react';
 import RouterUrl from './routerUrl'
 import Navbar from '../components/navbar'
 
-import 'bootswatch/dist/darkly/bootstrap.css';
-import '../custom.css';
+//min.js
+import 'toastr/build/toastr.min.js'
+
+//css
+import 'bootswatch/dist/darkly/bootstrap.css'
+import '../custom.css'
+import 'toastr/build/toastr.css'
 
 
 class App extends React.Component {

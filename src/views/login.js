@@ -2,11 +2,12 @@ import React from 'react';
 import Card from '../components/card';
 import FormGroup from '../components/form-group';
 
-//Permite navegar para outros componentes.
+//Usando destructuring para obter apensas a função 'withRouter' de 'react-router-dom'
 import { withRouter } from 'react-router-dom';
 
 import UsuarioService from '../app/service/usuarioService'
 import localstoreService from '../app/service/localstoreService'
+import { messagemErro } from '../components/toastr';
 
 
 //Componente de classe
@@ -15,7 +16,6 @@ class Login extends React.Component {
     state = {
         email: '',
         password: '',
-        messageError: null
     }
 
 
@@ -32,7 +32,7 @@ class Login extends React.Component {
         assinatura da funçao)
     */
 
-    login = async () => {
+    login = () => {
 
         this.service.autenticar({
             email: this.state.email,
@@ -47,13 +47,12 @@ class Login extends React.Component {
             JSON.stringify(objeto_js) -> JSON.stringify transforma um objeto JS que vem
             do backend em String.
             */
-
+            
             localstoreService.adicionarItem('_usuario_logado', response.data)
             this.props.history.push("/home")
 
-        }).catch(error => {
-
-            this.setState({ messageError: error.response.data })
+        }).catch(erro => {            
+            messagemErro(erro.response.data)
         })
     }
 
@@ -72,11 +71,7 @@ class Login extends React.Component {
                 <div className="col-md-6" style={{ position: 'relative', left: '300px' }}>
                     <div className="bs-docs-section">
 
-                        <Card title="Login">
-
-                            <div className="row">
-                                <span>{this.state.messageError}</span>
-                            </div>
+                        <Card title="Login">                         
 
                             <div className="row">
                                 <div className="col-lg-12">
