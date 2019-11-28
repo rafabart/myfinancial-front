@@ -1,10 +1,11 @@
-import React from 'react';
+import React from 'react'
 
-import Card from '../components/card';
-import FormGroup from '../components/form-group';
+import Card from '../components/card'
+import FormGroup from '../components/form-group'
+import UsuarioService from '../app/service/usuarioService'
 
-//Permite navegar para outros componentes.
-import { withRouter } from 'react-router-dom';
+import { withRouter } from 'react-router-dom'
+import { messagemSucesso, messagemErro } from '../components/toastr'
 
 
 class FormUser extends React.Component {
@@ -17,8 +18,61 @@ class FormUser extends React.Component {
         passwordAgain: ''
     }
 
+    constructor() {
+        super();
+        this.usuarioService = new UsuarioService();
+    }
+
+    validar() {
+
+        const msgs = []
+
+        //Verifica se o valor é nulo.
+        if (!this.state.name) {
+            msgs.push('O campo Nome é obrigatório!')
+        }
+
+        if (!this.state.email) {
+            msgs.push('O campo Email é obrigatório!')
+        } else if (!this.state.email.match(/^[a-z0-9.]+@[a-z0-9]+\.[a-z]/)) {
+            msgs.push('Informme um email válido!')
+        }
+
+        if (!this.state.password || !this.state.passwordAgain) {
+            msgs.push('Digite a senha 2 vezes!')
+        } else if (this.state.password !== this.state.passwordAgain) {
+            msgs.push('As senhas devem ser iguais!')
+        }
+
+        return msgs;
+    }
+
+
     save = () => {
-        console.log('User: ', this.state);
+
+        const msgs = this.validar()
+
+        //verifica se existem mensagens de erros.
+        if (msgs && msgs.length > 0) {
+            msgs.forEach((msg, index) => {
+                messagemErro(msg)
+            })
+            return false
+        }
+
+        const usuario = {
+            name: this.state.name,
+            email: this.state.email,
+            password: this.state.password
+        }
+
+        this.usuarioService.salvar(usuario)
+            .then(response => {
+                messagemSucesso('Usuário cadastro com sucesso! Faça o login para acessar o sistema!')
+                this.props.history.push('/login')
+            }).catch(error => {
+                messagemErro(error.response.data)
+            })
     }
 
     cancel = () => {
