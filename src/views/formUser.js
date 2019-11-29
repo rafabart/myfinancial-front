@@ -93,8 +93,7 @@ class FormUser extends React.Component {
                                 <input id="inputName" type="text"
                                     name="name"
                                     className="form-control"
-                                    placeholder="Digite o Nome"
-                                    // value={this.state.name}
+                                    placeholder="Digite o Nome"                                    
                                     onChange={e => this.setState({ name: e.target.value })} />
                             </FormGroup>
 
@@ -102,8 +101,7 @@ class FormUser extends React.Component {
                                 <input id="inputEmail" type="email"
                                     name="email"
                                     className="form-control"
-                                    placeholder="Digite o Email"
-                                    // value={this.state.email}
+                                    placeholder="Digite o Email"                                    
                                     onChange={e => this.setState({ email: e.target.value })} />
                             </FormGroup>
 
@@ -111,8 +109,7 @@ class FormUser extends React.Component {
                                 <input id="inputPassword" type="password"
                                     name="password"
                                     className="form-control"
-                                    placeholder="Digite o Password"
-                                    // value={this.state.password}
+                                    placeholder="Digite o Password"                                    
                                     onChange={e => this.setState({ password: e.target.value })} />
                             </FormGroup>
 
@@ -120,8 +117,7 @@ class FormUser extends React.Component {
                                 <input id="inputPasswordAgain" type="password"
                                     name="password"
                                     className="form-control"
-                                    placeholder="Digite o Password"
-                                    // value={this.state.passwordAgain}
+                                    placeholder="Digite o Password"                                    
                                     onChange={e => this.setState({ passwordAgain: e.target.value })} />
                             </FormGroup>
 

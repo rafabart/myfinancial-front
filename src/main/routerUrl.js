@@ -4,6 +4,7 @@ import React from 'react';
 import Login from '../views/login';
 import FormUser from '../views/formUser';
 import Home from '../views/home';
+import FormFindExpenses from '../views/expenses/formFindExpenses';
 
 //Obtendo recursos com destructuring(ES6)
 import { Route, Switch, HashRouter } from 'react-router-dom';
@@ -18,6 +19,7 @@ function RouterUrl() {
             <Switch>
                 <Route path="/login" component={Login} />
                 <Route path="/formUser" component={FormUser} />
+                <Route path="/formFindExpenses" component={FormFindExpenses} />
                 <Route path="/home" component={Home} />
             </Switch>
         </HashRouter>
