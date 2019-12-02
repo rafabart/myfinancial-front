@@ -4,21 +4,46 @@ import Card from '../../components/card'
 import FormGroup from '../../components/form-group'
 import SelectMenu from '../../components/selectMenu'
 import ExpensesTable from './expensesTable'
+import ExpenseService from '../../app/service/expenseService'
+import localstoraService from '../../app/service/localstoreService'
 
 class ConsultaLancamentos extends React.Component {
 
+    state = {
+        year: '',
+        month: '',
+        statusExpense: '',
+        typeExpense: '',
+        expenses: []
+    }
+
+    constructor() {
+        super();
+        this.expenseService = new ExpenseService();
+    }
+
+    buscar = () => {
+
+        const usuarioLogado = localstoraService.obterItem('_usuario_logado')
+
+        const lancamentoFiltro = {
+            year: this.state.year,
+            month: this.state.month,
+            statusExpense: this.state.statusExpense,
+            typeExpense: this.state.typeExpense,
+            userId: usuarioLogado.id
+        }
+
+        this.expenseService
+            .consultar(lancamentoFiltro)
+            .then(resposta => {
+                this.setState({ expenses: resposta.data })
+            }).catch(error => {
+                console.log(error)
+            })
+    }
+
     render() {
-
-        state = {
-            year: '',
-            month: '',
-            statusExpense: '',
-            typeExpense: ''
-        }
-
-        buscar = () => {
-            console.log(this.state)
-        }
 
         const meses = [
             { label: 'Selecione...', value: '' },
@@ -43,16 +68,11 @@ class ConsultaLancamentos extends React.Component {
             { label: 'Receita', value: 'RECEITA' }
         ]
 
-
-        const lancamentos = [
-            {
-                id: 1,
-                description: 'Salario',
-                value: 50000,
-                month: 11,
-                typeExpense: 'Receita',
-                statusExpense: 'Efetivado'
-            }
+        const status = [
+            { label: 'Selecione...', value: '' },
+            { label: 'Cancelado', value: 'CANCELADO' },
+            { label: 'Efetivado', value: 'EFETIVADO' },
+            { label: 'Pendente', value: 'PENDENTE' }
         ]
 
 
@@ -79,14 +99,24 @@ class ConsultaLancamentos extends React.Component {
                                 <SelectMenu className="form-control"
                                     lista={meses}
                                     value={this.state.month}
-                                    onChange={e => this.setState({ month: e.target.valueu })} />
+                                    onChange={e => this.setState({ month: e.target.value })} />
 
                             </FormGroup>
                             <FormGroup htmlFor="inputTipo" label="Tipo de Lançamento: *">
+
                                 <SelectMenu className="form-control"
                                     lista={tipos}
                                     value={this.state.typeExpense}
-                                    onChange={e => this.setState({ typeExpense: e.target.valueu })} />
+                                    onChange={e => this.setState({ typeExpense: e.target.value })} />
+
+                            </FormGroup>
+                            <FormGroup htmlFor="inputStatus" label="Status do Lançamento: *">
+
+                                <SelectMenu className="form-control"
+                                    lista={status}
+                                    value={this.state.stateExpense}
+                                    onChange={e => this.setState({ stateExpense: e.target.value })} />
+
                             </FormGroup>
 
                             <button onClick={this.buscar} className="btn btn-success mr-3">Buscar</button>
@@ -97,9 +127,9 @@ class ConsultaLancamentos extends React.Component {
                 </div>
 
                 <div className="row">
-                    <div className="col-lg-6">
+                    <div className="col-lg-12">
                         <div className="bs-component">
-                            <ExpensesTable lancamentos={lancamentos} />
+                            <ExpensesTable lancamentos={this.state.expenses} />
                         </div>
                     </div>
                 </div>
