@@ -4,7 +4,6 @@ import React from 'react'
 export default props => {
 
     const rows = props.lancamentos.map(lancamento => {
-
         return (
             <tr key={lancamento.id}>
                 <td>{lancamento.description}</td>
@@ -21,7 +20,6 @@ export default props => {
 
 
     return (
-
         <table className="table table-hover">
             <thead>
                 <tr>
@@ -34,7 +32,7 @@ export default props => {
                 </tr>
             </thead>
             <tbody>
-
+                {rows}
             </tbody>
         </table>
     )

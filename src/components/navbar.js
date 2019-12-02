@@ -23,7 +23,7 @@ function Navbar() {
                         que esta sendo usado para rotear as requisições de url */}
                         <NavbarItem href="#/home" label="Home" />
                         <NavbarItem href="#/formUser" label="Usuários" />
-                        <NavbarItem href="#/" label="Lançamentos" />
+                        <NavbarItem href="#/formFindExpenses"  label="Lançamentos" />
                         <NavbarItem href="#/login" label="Login" />
 
                     </ul>
