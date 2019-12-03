@@ -6,6 +6,7 @@ import SelectMenu from '../../components/selectMenu'
 import ExpensesTable from './expensesTable'
 import ExpenseService from '../../app/service/expenseService'
 import localstoraService from '../../app/service/localstoreService'
+import * as messages from '../../components/toastr'
 
 class ConsultaLancamentos extends React.Component {
 
@@ -14,6 +15,7 @@ class ConsultaLancamentos extends React.Component {
         month: '',
         statusExpense: '',
         typeExpense: '',
+        description: '',
         expenses: []
     }
 
@@ -24,6 +26,11 @@ class ConsultaLancamentos extends React.Component {
 
     buscar = () => {
 
+        if (!this.state.year) {
+            messages.messagemErro('O preenchimento do campo Ano é obrigatório!')
+            return false
+        }
+
         const usuarioLogado = localstoraService.obterItem('_usuario_logado')
 
         const lancamentoFiltro = {
@@ -31,8 +38,10 @@ class ConsultaLancamentos extends React.Component {
             month: this.state.month,
             statusExpense: this.state.statusExpense,
             typeExpense: this.state.typeExpense,
+            description: this.state.description,
             userId: usuarioLogado.id
         }
+
 
         this.expenseService
             .consultar(lancamentoFiltro)
@@ -45,36 +54,11 @@ class ConsultaLancamentos extends React.Component {
 
     render() {
 
-        const meses = [
-            { label: 'Selecione...', value: '' },
-            { label: 'Janeiro', value: '1' },
-            { label: 'Fevereiro', value: '2' },
-            { label: 'Março', value: '3' },
-            { label: 'Abril', value: '4' },
-            { label: 'Maio', value: '5' },
-            { label: 'Junho', value: '6' },
-            { label: 'Julho', value: '7' },
-            { label: 'Agosto', value: '8' },
-            { label: 'Setembro', value: '9' },
-            { label: 'Outubro', value: '10' },
-            { label: 'Novembro', value: '11' },
-            { label: 'Dezembro', value: '12' }
-        ]
+        const meses = this.expenseService.obterListaMeses();
 
+        const tipos = this.expenseService.obterListaTipo();
 
-        const tipos = [
-            { label: 'Selecione...', value: '' },
-            { label: 'Despesa', value: 'DESPESA' },
-            { label: 'Receita', value: 'RECEITA' }
-        ]
-
-        const status = [
-            { label: 'Selecione...', value: '' },
-            { label: 'Cancelado', value: 'CANCELADO' },
-            { label: 'Efetivado', value: 'EFETIVADO' },
-            { label: 'Pendente', value: 'PENDENTE' }
-        ]
-
+        const status = this.expenseService.obterListaStatus();
 
         return (
 
@@ -94,7 +78,17 @@ class ConsultaLancamentos extends React.Component {
                                     onChange={e => this.setState({ year: e.target.value })} />
 
                             </FormGroup>
-                            <FormGroup htmlFor="inputMes" label="Mês: *">
+                            <FormGroup htmlFor="inputDescription" label="Descrição: ">
+
+                                <input id="inputDescription" type="text"
+                                    name="ano"
+                                    className="form-control"
+                                    placeholder="Digite a Descrição"
+                                    value={this.state.description}
+                                    onChange={e => this.setState({ description: e.target.value })} />
+
+                            </FormGroup>
+                            <FormGroup htmlFor="inputMes" label="Mês: ">
 
                                 <SelectMenu className="form-control"
                                     lista={meses}
@@ -102,7 +96,7 @@ class ConsultaLancamentos extends React.Component {
                                     onChange={e => this.setState({ month: e.target.value })} />
 
                             </FormGroup>
-                            <FormGroup htmlFor="inputTipo" label="Tipo de Lançamento: *">
+                            <FormGroup htmlFor="inputTipo" label="Tipo de Lançamento: ">
 
                                 <SelectMenu className="form-control"
                                     lista={tipos}
@@ -110,7 +104,7 @@ class ConsultaLancamentos extends React.Component {
                                     onChange={e => this.setState({ typeExpense: e.target.value })} />
 
                             </FormGroup>
-                            <FormGroup htmlFor="inputStatus" label="Status do Lançamento: *">
+                            <FormGroup htmlFor="inputStatus" label="Status do Lançamento: ">
 
                                 <SelectMenu className="form-control"
                                     lista={status}
