@@ -19,8 +19,7 @@ toastr.options = {
 }
 
 export function mostrarMensagem(titulo, mensagem, tipo) {
-    toastr[tipo](mensagem, titulo)
-    console.log("EROU")
+    toastr[tipo](mensagem, titulo)    
 }
 
 export function messagemErro(mensagem) {

@@ -1,12 +1,17 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
+
 import Card from '../../components/card'
 import FormGroup from '../../components/form-group'
 import SelectMenu from '../../components/selectMenu'
 import ExpensesTable from './expensesTable'
 import ExpenseService from '../../app/service/expenseService'
 import localstoraService from '../../app/service/localstoreService'
+
 import * as messages from '../../components/toastr'
+
+import { Dialog } from 'primereact/dialog'
+import { Button } from 'primereact/button'
 
 class ConsultaLancamentos extends React.Component {
 
@@ -16,6 +21,8 @@ class ConsultaLancamentos extends React.Component {
         statusExpense: '',
         typeExpense: '',
         description: '',
+        showConfirmDialog: false,
+        lancamentoDeletar: {},
         expenses: []
     }
 
@@ -52,6 +59,36 @@ class ConsultaLancamentos extends React.Component {
             })
     }
 
+    editar = (id) => {
+        console.log('Editar', id)
+    }
+
+
+    abrirConfirmação = (lancamento) => {
+        this.setState({ showConfirmDialog: true, lancamentoDeletar: lancamento })
+    }
+
+    cancelarDelecao = (lancamento) => {
+        this.setState({ showConfirmDialog: false, lancamentoDeletar: lancamento })
+    }
+
+
+    deletar = () => {
+        this.expenseService
+            .deletar(this.state.lancamentoDeletar.id)
+            .then(response => {
+
+                const expenses = this.state.expenses;
+                const index = expenses.indexOf(this.state.lancamentoDeletar)
+                expenses.splice(index, 1)
+                this.setState({ expenses: expenses, showConfirmDialog: false })
+
+                messages.messagemSucesso('Lançamento deletado com sucesso!');
+            }).catch(error => {
+                messages.messagemErro('Ocorreu um erro ao tentar deletar o Lançamento!')
+            })
+    }
+
     render() {
 
         const meses = this.expenseService.obterListaMeses();
@@ -59,6 +96,13 @@ class ConsultaLancamentos extends React.Component {
         const tipos = this.expenseService.obterListaTipo();
 
         const status = this.expenseService.obterListaStatus();
+
+        const footer = (
+            <div>
+                <Button label="Confirmar" icon="pi pi-check" onClick={this.deletar} />
+                <Button label="Cancelar" icon="pi pi-times" onClick={this.cancelarDelecao} className="p-button-secondary" />
+            </div>
+        )
 
         return (
 
@@ -123,8 +167,21 @@ class ConsultaLancamentos extends React.Component {
                 <div className="row">
                     <div className="col-lg-12">
                         <div className="bs-component">
-                            <ExpensesTable lancamentos={this.state.expenses} />
+                            <ExpensesTable lancamentos={this.state.expenses}
+                                deletarAction={this.abrirConfirmação}
+                                editarAction={this.editar}
+                            />
                         </div>
+                    </div>
+                    <div>
+                        <Dialog header="Confirmação"
+                            visible={this.state.showConfirmDialog}
+                            style={{ width: '50vw' }}
+                            footer={footer}
+                            modal={true}
+                            onHide={() => this.setState({ showConfirmDialog: false })}>
+                            Confirma a exclusão deste lançamento?
+                        </Dialog>
                     </div>
                 </div>
 

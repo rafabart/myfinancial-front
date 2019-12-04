@@ -48,7 +48,7 @@ export default class LancamentoService extends ApiService {
 
     consultar(lancamentoFiltro) {
 
-        let params = `?year=${lancamentoFiltro.year}`       
+        let params = `?year=${lancamentoFiltro.year}`
 
         if (lancamentoFiltro.month) {
             params = `${params}&month=${lancamentoFiltro.month}`
@@ -72,5 +72,10 @@ export default class LancamentoService extends ApiService {
 
         return this.get(params)
 
+    }
+
+
+    deletar(id) {
+        return this.delete(`/${id}`)
     }
 }
