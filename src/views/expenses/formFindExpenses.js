@@ -53,14 +53,20 @@ class ConsultaLancamentos extends React.Component {
         this.expenseService
             .consultar(lancamentoFiltro)
             .then(resposta => {
-                this.setState({ expenses: resposta.data })
+
+                const lista = resposta.data
+
+                if (lista.length < 1) {
+                    messages.messagemErro("Nenhum resultado encontrado!")
+                }
+                this.setState({ expenses: lista })
             }).catch(error => {
                 console.log(error)
             })
     }
 
     editar = (id) => {
-        console.log('Editar', id)
+        this.props.history.push(`/formExpenses/${id}`)
     }
 
 
@@ -86,6 +92,26 @@ class ConsultaLancamentos extends React.Component {
                 messages.messagemSucesso('Lançamento deletado com sucesso!');
             }).catch(error => {
                 messages.messagemErro('Ocorreu um erro ao tentar deletar o Lançamento!')
+            })
+    }
+
+    preparaFormularioCadastro = () => {
+        this.props.history.push('/formExpenses')
+    }
+
+    alterarStatus = (lancamento, status) => {
+        this.expenseService
+            .alterarStatus(lancamento.id, status)
+            .then(response => {
+                const lancamentos = this.state.expenses;
+                const index = lancamentos.indexOf(lancamento);
+
+                if (index !== -1) {
+                    lancamento['statusExpense'] = status;
+                    lancamentos[index] = lancamento;
+                    this.setState({ lancamento })
+                }
+                messages.messagemSucesso("Status atualizado com sucesso!")
             })
     }
 
@@ -157,8 +183,10 @@ class ConsultaLancamentos extends React.Component {
 
                             </FormGroup>
 
-                            <button onClick={this.buscar} className="btn btn-success mr-3">Buscar</button>
-                            <button onClick={this.cancel} className="btn btn-danger">Cancelar</button>
+                            <button onClick={this.buscar} className="btn btn-success mr-3">
+                                <i className="pi pi-search"></i>Buscar</button>
+                            <button onClick={this.preparaFormularioCadastro} className="btn btn-danger">
+                                <i className="pi pi-plus"></i>Cadastrar</button>
 
                         </div>
                     </div>
@@ -170,7 +198,7 @@ class ConsultaLancamentos extends React.Component {
                             <ExpensesTable lancamentos={this.state.expenses}
                                 deletarAction={this.abrirConfirmação}
                                 editarAction={this.editar}
-                            />
+                                alterarStatus={this.alterarStatus} />
                         </div>
                     </div>
                     <div>

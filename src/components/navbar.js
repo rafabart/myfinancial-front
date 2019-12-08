@@ -1,13 +1,15 @@
 import React from 'react';
-import NavbarItem from './navbarItem';
 
-function Navbar() {
+import NavbarItem from './navbarItem';
+import { AuthConsumer } from '../main/provedorAutenticado'
+
+function Navbar(props) {
     return (
 
         <div className="navbar navbar-expand-lg fixed-top navbar-dark bg-primary">
             <div className="container">
 
-                <a href="https://bootswatch.com/" className="navbar-brand">Minhas Finanças</a>
+                <a href="#/home" className="navbar-brand">Minhas Finanças</a>
 
                 <button className="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarResponsive" aria-controls="navbarResponsive"
@@ -21,10 +23,10 @@ function Navbar() {
 
                         {/* Deve-se usar o '#/' no inicio da url por causa do componente HashRouter
                         que esta sendo usado para rotear as requisições de url */}
-                        <NavbarItem href="#/home" label="Home" />
-                        <NavbarItem href="#/formUser" label="Usuários" />
-                        <NavbarItem href="#/formFindExpenses"  label="Lançamentos" />
-                        <NavbarItem href="#/login" label="Login" />
+                        <NavbarItem render={props.isUsuarioAutenticado} href="#/home" label="Home" />
+                        <NavbarItem render={props.isUsuarioAutenticado} href="#/formUser" label="Usuários" />
+                        <NavbarItem render={props.isUsuarioAutenticado} href="#/formFindExpenses" label="Lançamentos" />
+                        <NavbarItem render={props.isUsuarioAutenticado} href="#/login" onClick={props.deslogar} label="Sair" />
 
                     </ul>
 
@@ -35,4 +37,8 @@ function Navbar() {
     )
 }
 
-export default Navbar;
+export default () => (
+    <AuthConsumer>
+        {(context) => (<Navbar isUsuarioAutenticado={context.isAutenticado} deslogar={context.encerrarSessao} />)}
+    </AuthConsumer>
+)

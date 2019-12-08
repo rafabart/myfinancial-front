@@ -2,7 +2,7 @@ import React from 'react';
 import currencyFormatter from 'currency-formatter'
 
 import UsuarioService from '../app/service/usuarioService'
-import localstoraService from '../app/service/localstoreService'
+import { AuthContext } from '../main/provedorAutenticado';
 
 class Home extends React.Component {
 
@@ -19,9 +19,9 @@ class Home extends React.Component {
 
 
     componentDidMount() {
-
-        const usuarioLogado = localstoraService.obterItem('_usuario_logado')
-
+        
+        const usuarioLogado = this.context.usuarioAutenticado
+        
         this.usuarioService
             .obterSaldoPorUsuario(usuarioLogado.id)
             .then((response) => {
@@ -46,11 +46,11 @@ class Home extends React.Component {
 
                 <p className="lead">
                     <a className="btn btn-primary btn-lg mr-3"
-                        href="#/formUser" role="button"><i className="fa fa-users"></i>
+                        href="#/formUser" role="button"><i className="pi pi-users"></i>
                         Cadastrar Usuário
                     </a>
                     <a className="btn btn-danger btn-lg"
-                        href="https://bootswatch.com/flatly/#" role="button"><i className="fa fa-users"></i>
+                        href="#/formExpenses" role="button"><i className="pi pi-money-bill"></i>
                         Cadastrar Lançamento
                     </a>
                 </p>
@@ -60,5 +60,7 @@ class Home extends React.Component {
         )
     }
 }
+
+Home.contextType = AuthContext
 
 export default Home;
